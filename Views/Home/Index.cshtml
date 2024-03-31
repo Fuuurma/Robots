@@ -1,0 +1,349 @@
+﻿@{
+    @using UF2_Robots.Models.Robots
+    @using UF2_Robots.Models.Androids
+    @using UF2_Robots.Models.Database
+    @using UF2_Robots.Models.Generics
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="hero-container" data-type="robot" data-name="RX-123">
+    <div class="type-selector-container" 
+            id="selected-type" 
+            data-selected-type="robot">
+        <button type="radio" 
+                id="robot-selector" 
+                class="selected" 
+                data-selector="robot">
+            <i class="fa-solid fa-robot"></i>
+            ROBOT
+            </button>
+        <button type="radio" 
+        id="android-selector" 
+        data-selector="android">
+            <i class="fa-solid fa-user"></i>
+            ANDROIDE
+            </button>
+    </div>
+
+    <div class="actions-container">
+        <div class="actions">
+            <button id="add-object" class="hover-robot">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+            <button  id="show-object"class="show-robot show-android">
+                <i class="fa-solid fa-eye"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="selected-object-container" 
+            id="selected-object-container" 
+            data-item-selected-id=""
+            data-item-selected-name=""
+            data-item-selected-category=""
+            data-item-selected-price=""
+            data-item-selected-table=""
+            data-item-selected-type="">
+
+        <div class="selected-name-container">
+            <i class="" id="selected-type-icon"></i>
+            <h3 id="selected-name"></h3>
+        </div>
+        <div class="selected-actions">
+            <button id="edit-object">
+                <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button id="delete-object">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="data-container" id="data-container">
+    <div class="robot-data-container">
+        <ul> 
+            <li >
+                <div class="object-element-container">
+                    <div class="object-name-container">
+                        <h3>ROBOTS</h3>
+                    </div>
+                    <div class="object-data-container">
+                        <H3>TIPO</H3>
+                        <H3>PRECIO</H3>
+                    </div>
+                    <div class="object-actions-container">
+                        #
+                    </div>
+                </div>
+            </li>      
+             @if (ViewData["Robots"] != null)
+        {
+            var robots = ViewData["Robots"] as List<INotHuman<Robot>>;
+            foreach (var robot in robots)
+            {
+                <li id="R-@robot.Id">
+                    <div class="object-element-container">
+                        <div class="object-name-container">
+                            <h3>@robot.Name</h3>
+                        </div>
+                        <div class="object-data-container">
+                           <h3>@robot.Type</h3>
+                           <h3>@robot.Price.ToString("C")</h3>
+                        </div>
+                        <div class="object-actions-container">
+                            <button class="see-object hover-robot" 
+                                   data-item-type="@robot.Type"
+                                    data-item-id="@robot.Id"
+                                    data-item-name="@robot.Name"
+                                    data-item-category="@robot.DescCategory"
+                                    data-item-price="@robot.Price"
+                                    data-item-table="Robots">
+                                <i class="fa-solid fa-eye-slash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            }
+        }
+        else
+        {
+            <li>
+                <div class="object-element-container">
+                    <div class="object-name-container">
+                        <h3>No data available</h3>
+                    </div>
+                </div>
+            </li>
+        }
+
+             
+
+             
+        </ul>
+    </div>
+    <div class="android-data-container">
+         <ul>
+             <li>
+                <div class="object-element-container">
+                    <div class="object-name-container">
+                        <h3>ANDROIDES</h3>
+                    </div>
+                    <div class="object-data-container">
+                        <H3>TIPO</H3>
+                        <H3>PRECIO</H3>
+                    </div>
+                    <div class="object-actions-container">
+                        #
+                    </div>
+                </div>
+            </li> 
+
+        @if (ViewData["Androids"] != null)
+        {
+            @foreach (var android in ViewData["Androids"] as List<INotHuman<Android>>)
+            {
+                <li id="A-@android.Id">
+                    <div class="object-element-container">
+                        <div class="object-name-container">
+                            <h3>@android.Name</h3>
+                        </div>
+                        <div class="object-data-container">
+                            <h3>@android.Type</h3>
+                            <h3>@android.Price.ToString("C")</h3>
+                        </div>
+                        <div class="object-actions-container">
+                            <button class="see-object hover-android" 
+                                    data-item-type="@android.Type"
+                                    data-item-id="@android.Id"
+                                    data-item-name="@android.Name"
+                                    data-item-category="@android.DescCategory"
+                                    data-item-price="@android.Price"
+                                    data-item-table="Androids">
+                                <i class="fa-solid fa-eye-slash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            }
+        } 
+        else
+        {
+            <li>
+                <div class="object-element-container">
+                    <div class="object-name-container">
+                        <h3>No data available</h3>
+                    </div>
+                </div>
+            </li>
+        }
+            
+        </ul>
+    </div>
+</div>
+
+<div class="modal" id="add-object-modal" 
+     data-object-type=""
+     data-object-table="">
+  <div class="modal-content">
+    <form action="" id="add-object-form">
+        <div class="form-title">
+            <h1 id="add-item-form-tittle">New Robot</h1>
+            <span class="close">&times;</span>
+        </div>
+        <div class="form-inputs">
+            <div class="form-row">
+                <label for="name">Nombre:</label>
+                <input type="text" id="name"disabled>
+            </div>
+            <div class="form-row">
+                <label for="type">Tipo:</label>
+                <select id="type-robot" name="type">
+                    <option value="R2-D2">R2-D2</option>
+                    <option value="C3PO">C3PO</option>
+                    <option value="BBB">BBB</option>
+                </select>
+                <input type="text" id="type-android" placeholder="Algo...">
+            </div>
+
+            <div class="form-row">
+                <label for="price">Precio:</label>
+                <input type="number" id="price" placeholder="Precio:">
+            </div>
+        </div>
+        <div class="form-action-container">
+            <button id="create-item-create-btn">
+                <i class="fa-solid fa-plus"></i>
+                <h3>Crear</h3>
+            </button>
+
+            <button id="create-item-update-btn" disabled>
+                <i class="fa-solid fa-wrench"></i>
+                <h3>Actualizar</h3>
+            </button>
+
+            <button id="create-item-reset-btn"disabled>
+                <i class="fa-solid fa-scissors"></i>
+                <h3>Resetear</h3>
+            </button>
+        </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal" id="edit-object-modal" >
+  <div class="modal-content">
+    <form action="" 
+    id="edit-object-form" 
+    data-item-type=""
+    data-item-id=""
+    data-item-name=""
+    data-item-category="Robot"
+    data-item-price=""
+    data-item-table="">
+        <div class="form-title">
+            <h1 id="edit-item-tittle">Edit Object</h1>
+            <span class="close">&times;</span>
+        </div>
+        <div class="form-inputs">
+            <div class="form-row">
+                <label for="edit-name">Nombre:</label>
+                <input type="text" id="edit-name" autofocus>
+            </div>
+            <div class="form-row">
+                <label for="edit-type">Tipo:</label>
+                <select id="edit-type-robot" name="type">
+                    <option value="R2-D2">R2-D2</option>
+                    <option value="C3PO">C3PO</option>
+                    <option value="BBB">BBB</option>
+                </select>
+                <input type="text" id="edit-type-android" placeholder="Algo...">
+            </div>
+            <div class="form-row">
+                <label for="edit-price">Precio:</label>
+                <input type="number" id="edit-price" placeholder="Precio:">
+            </div>
+        </div>
+        <div class="form-action-container">
+            <button id="edit-item-create">
+                <i class="fa-solid fa-plus"></i>
+                <h3>Crear</h3>
+            </button>
+
+            <button id="edit-item-update">
+                <i class="fa-solid fa-wrench"></i>
+                <h3>Actualizar</h3>
+            </button>
+
+            <button id="edit-item-reset">
+                <i class="fa-solid fa-scissors"></i>
+                <h3>Resetear</h3>
+            </button>
+        </div>
+    </form>
+  </div>
+</div>
+
+<div id="info-modal-i">
+    <i class="fa-solid fa-circle-info" 
+    id="see-info-modal-icon"></i>
+</div>
+
+<div id="info-modal">
+    <div id="info-modal-content">
+        <div class="info-modal-tittle">
+            <h1>¿Qué se puede hacer en esta APP?</h1>
+
+            <a target="_blank" style="color: var(--robot-2);"
+            href="https://github.com/marcetpx/Sergi/tree/main/m3_programacio/UF2_Proyecto">
+            Codigo:</a>
+
+            <p>
+                *Algunas veces, las acciones se ejecutan pero la página no se actualiza.
+                Si ves que las acciones no aparecen, F5 y refresca por favor.
+            </p>
+
+        <div class="close">&times;</div>
+        </div>
+        <ul>
+            <li>
+            <i class="fa-solid fa-user"></i>
+            <i class="fa-solid fa-robot"></i>
+                Seleccionar categoría.
+            </li>
+
+            <li>
+                <i class="fa-solid fa-plus"></i>
+                Añadir Robots y Androides
+            </li>
+            <li>
+                <i class="fa-solid fa-pen-to-square"></i>
+                Editar los Robots y Androides creados
+            </li>
+            <li>
+                <i class="fa-solid fa-trash-can"></i>
+                Eliminarlos
+            </li>
+            <li>
+                <i class="fa-solid fa-wrench"></i>
+                Actualizar Robots y Androides
+            </li>
+            <li>
+                <i class="fa-solid fa-scissors"></i>
+                Resetear de fábrica
+            </li>
+            <li>
+                <i class="fa-solid fa-eye"></i>
+                Cambiar la visibilidad de los grupos.
+            </li>
+        </ul>
+
+    </div>
+</div>
+
+<div id="action-result-logger" class="success">
+    <div id="action-result-content">
+        <h4 id="action-result-message">
+        </h4>
+    </div>
+</div>
